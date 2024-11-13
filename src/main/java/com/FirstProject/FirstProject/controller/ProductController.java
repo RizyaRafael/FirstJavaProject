@@ -1,9 +1,12 @@
 package com.FirstProject.FirstProject.controller;
 
+import com.FirstProject.FirstProject.exception.ItemNotFoundException;
 import com.FirstProject.FirstProject.model.Product;
 import com.FirstProject.FirstProject.service.ProductService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,19 +26,19 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public Optional<Product> getProductById(@PathVariable int productId){
+    public Optional<Product> getProductById(@PathVariable int productId) {
         return service.getProductById(productId);
     }
 
     @GetMapping("/search")
-    public Optional<List<Product>> getProductByName(@RequestParam(value = "prodName") String prodName){
-        log.info("Product name variable: "+prodName);
-        return service.getProductByName(prodName);
+    public ResponseEntity<List<Product>> getProductByName(@RequestParam(value = "prodName") String prodName) {
+        Optional<List<Product>> products = service.getProductByName(prodName);
+        return new ResponseEntity<List<Product>>(products.get(), HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public Product createProduct(@RequestBody Product prod){
-        log.info("this is the body: " + prod.toString());
+    public Product createProduct(@RequestBody Product prod) {
+        log.info("this is the body" + prod.toString());
         return null;
     }
 }
